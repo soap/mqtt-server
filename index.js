@@ -1,17 +1,25 @@
-const aedes = require('aedes')()
-const server = require('net').createServer(aedes.handle)
+const Aedes = require('aedes')
 const port = 8888
+
+const brokerConfiguration = {
+  concurrency: 100,
+}
+
+const broker = Aedes(brokerConfiguration)
+
+const server = require('net').createServer(broker.handle)
 
 server.listen(port, function () {
   console.log('server started and listening on port ', port)
+  
 })
 
-server.on('client', (client) => {
-  console.log('cliet connected')
+broker.on('client', (client) => {
+  console.log(`${client.id} has connected!`)
 })
 
-server.on('clientReady', (client) => {
-  console.log('client ready')
+broker.on('clientReady', (client) => {
+  console.log(`${client.id} is ready.`)
 })
 
 
